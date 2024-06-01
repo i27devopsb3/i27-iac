@@ -38,3 +38,7 @@ variable "instances" {
     }
   }
 }
+
+variable "vm_user" {
+  default = "siva" # -var=vm_user=mahers
+}

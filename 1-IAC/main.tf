@@ -30,8 +30,27 @@ resource "google_compute_firewall" "tf-allow-ports" {
   source_ranges = ["0.0.0.0/0"]
 }
 
-# This will create Compute Engine instances which are needed for i27 infrastructure 
+# Generate a SSH key pair
+resource "tls_private_key" "ssh-key" {
+  algorithm = "RSA"
+  rsa_bits = 2048
+}
 
+# Save the Private key to a local file 
+resource "local_file" "private_key" {
+ content = tls_private_key.ssh-key.private_key_pem
+ filename =  "${path.module}/id_rsa"         # "/Users/devopswithcloud/Documents/projects-d3/id_rsa" #
+}
+
+# Save the Public key to a local file
+resource "local_file" "public_key" {
+  content = tls_private_key.ssh-key.public_key_openssh
+  filename =  "${path.module}/id_rsa.pub"         # "/Users/devopswithcloud/Documents/projects-d3/id_rsa.pub" 
+}
+
+
+
+# This will create Compute Engine instances which are needed for i27 infrastructure 
 resource "google_compute_instance" "tf-vm-instances" {
   for_each = var.instances
   name = each.key
@@ -53,6 +72,35 @@ resource "google_compute_instance" "tf-vm-instances" {
     network = google_compute_network.tf-vpc.name
     subnetwork  = google_compute_subnetwork.tf-subnet.name
   }
+  
+  metadata = {
+    ssh-keys = "${var.vm_user}:${tls_private_key.ssh-key.public_key_openssh}"
+  }
+  # Connection 
+  connection {
+    type = "ssh"
+    user = var.vm_user
+    host = self.network_interface[0].access_config[0].nat_ip
+    private_key = tls_private_key.ssh-key.private_key_pem # Lets use the private key from the TLS resource 
+  }
+
+  # Provisioner
+  # file, remote-exec, local-exec
+  provisioner "file" {
+    # If ansible machine, execute ansible.sh
+    # if otherthan ansible, execute other.sh
+    # condition ? success : Failure
+    source =  each.key == "ansible" ? "ansible.sh" : "other.sh"     # Conditional 
+    destination = each.key == "ansible" ? "/home/${var.vm_user}/ansible.sh" : "/home/siva/other.sh"
+  }
+
+  # In ansible vm, ansibl.sh should execute
+  provisioner "remote-exec" {
+    inline = [ 
+      each.key == "ansible" ? "chmod +x /home/${var.vm_user}/ansible.sh && sh /home/${var.vm_user}/ansible.sh" : "echo 'Skipping the Command!!!!'"
+     ]
+  }
+
 }
 
 # Data block to get images 
@@ -62,3 +110,22 @@ data "google_compute_image" "ubuntu_image" {
   family = "ubuntu-2004-lts"
   project = "ubuntu-os-cloud"
 }
+
+
+
+
+  # This connection block, helos us to connect to VM's via ssh
+  # connection {
+  #   type = "ssh" #linux machine
+  #   user = "siva" # amazon ==> ubuntu its ubuntu, redhat its ec2-user
+  #   host = self.network_interface[0].access_config[0].nat_ip
+  #   # We need to generate the public and private key
+  #   # ssh-keygen -t rsa -f ~/iacb3/ssh-key -C siva
+  #   # Create the ssh-key file under the same location where your tf manifest are avaialble
+  #   private_key = file("ssh-key") # Private key
+  #   # After the public and private keys are generated , copy the public key at gcp project metadata, if you want to access all the vm's under the project
+  #   # If you want to access only specific vm's then add the public key under those vm's metadata
+  #   # But for now, i need to have the keys added to the vm's that i am creating 
+  # }
+
+  # Provisioner
