@@ -5,3 +5,6 @@
 - Store the statefile under a folder called as `infrastate` inside the bucket.
 - Mention the bucket name dynamically during the runtime(terraform apply)
 - Explore a way where i can mention the know_hosts approval rather than giving as `yes`
+
+### Playbooks
+- Create a playbook to install configure `sonar`
