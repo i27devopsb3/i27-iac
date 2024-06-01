@@ -101,6 +101,8 @@ resource "google_compute_instance" "tf-vm-instances" {
      ]
   }
 
+  # Copy the private key to all the machines
+
 }
 
 # Data block to get images 

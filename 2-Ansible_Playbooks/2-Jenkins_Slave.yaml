@@ -1,0 +1,22 @@
+# Slave packages
+
+---
+- hosts: jenkins-slave
+  become: true
+  tasks:
+  - name: Updating the Repository
+    ansible.builtin.apt:
+      update_cache: true
+      cache_valid_time: 3600
+  - name: Install jave for slave
+    apt: 
+      name: openjdk-11-jre
+      state: present
+  - name: Create a home dir for jenkins in slave
+    file:
+      path: /home/siva/jenkins
+      state: directory
+      mode: '0755'
+      owner: siva
+      group: siva
+
