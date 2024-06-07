@@ -16,6 +16,15 @@ resource "google_compute_subnetwork" "tf-subnet" {
   ip_cidr_range = var.cidr
 }
 
+# Create a subnet for sonarqube
+resource "google_compute_subnetwork" "sonarqube-subnet" {
+  name = "${var.vpc_name}-sonarqube-subnet"
+  network = google_compute_network.tf-vpc.name # Arguments
+  # network = var.vpc_name
+  region = "us-east1"
+  ip_cidr_range = "10.5.0.0/16"
+}
+
 # This will create firewalls for the i27-ecommerce-vpc
 resource "google_compute_firewall" "tf-allow-ports" {
   name = var.firewall_name
@@ -70,7 +79,9 @@ resource "google_compute_instance" "tf-vm-instances" {
         network_tier = "PREMIUM"
       }
     network = google_compute_network.tf-vpc.name
-    subnetwork  = google_compute_subnetwork.tf-subnet.name
+    // Below is for subnetwork 
+    // subnetwork  = google_compute_subnetwork.tf-subnet.name
+    subnetwork = each.key == "sonarqube" ? google_compute_subnetwork.sonarqube-subnet.name : google_compute_subnetwork.tf-subnet.name
   }
   
   metadata = {

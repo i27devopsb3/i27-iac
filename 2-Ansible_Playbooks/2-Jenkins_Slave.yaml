@@ -37,4 +37,14 @@
       src: /opt/apache-maven-3.8.8-bin.tar.gz
       dest: /opt
       remote_src: yes
-
+  # Below is to Install docker 
+  - name: Install Docker 
+    ansible.builtin.apt:
+      name: docker.io
+      state: present
+  # Add user to docker group
+  - name: Add User Siva to the group 
+    user:
+      name: siva
+      groups: docker 
+      append: yes 

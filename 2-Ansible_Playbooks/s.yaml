@@ -55,20 +55,17 @@
     args:
        removes: /opt/sonarqube-9.7.1.62043
        creates: /opt/sonarqube971
-  - name: Add environment varilables to perpare the environment
+  - name: Add environment variables to /etc/profile
     ansible.builtin.blockinfile:
      path: /etc/profile
      state: present
      block: |
-      {{ item.env }}
-     marker: "# {mark} ANSIBLE MANAGED BLOCK {{ item.env }}"
-    loop:
-      - {env: 'JAVA_HOME=/opt/jdk17'}
-      - {env: 'PATH=$PATH:$JAVA_HOME/bin'}
-      - {env: 'e=/opt/maven388'}
-      - {env: 'PATH=$PATH:$MAVEN_HOME/bin'}
-      - {env: 'SONAR_JAVA_PATH=/opt/jdk17'}
-      - {env: 'PATH=$PATH:$SONAR_JAVA_PATH/bin'}
+      export JAVA_HOME=/opt/jdk17
+      export PATH=$PATH:$JAVA_HOME/bin
+      export MAVEN_HOME=/opt/maven388
+      export PATH=$PATH:$MAVEN_HOME/bin
+      export SONAR_JAVA_PATH=/opt/jdk17/bin/java
+     marker: "# {mark} ANSIBLE MANAGED BLOCK"
   - name: Change ownership and permissions
     ansible.builtin.file:
       path: "{{item.perms}}"
@@ -81,19 +78,21 @@
   - name: Configure SonarQube to run as the sonar user
     ansible.builtin.lineinfile:
      path: "/opt/sonarqube971/bin/linux-x86-64/sonar.sh"
-     regexp: "RUN_AS_USER=sonar"
-     insertafter: "#RUN_AS_USER="
+     regexp: "^#RUN_AS_USER="
+     insertafter: "^#RUN_AS_USER="
      line: "RUN_AS_USER=sonar"
   - name: Copy Startup Service Script to Remote Server
     ansible.builtin.template:
      src: sonar.service
-     dest: /etc/systemd/system
-     owner: sonar
-     group: sonar
-     mode: 0755
+     dest: /etc/systemd/system/sonar.service
+     owner: root
+     group: root
+     mode: 0644
+  - name: Reload systemd
+    ansible.builtin.systemd:
+     daemon_reload: yes
   - name: Start Sonar Service
     ansible.builtin.systemd:
      name: sonar
      enabled: yes
      state: started
-     daemon_reload: true
