@@ -48,3 +48,10 @@
       name: siva
       groups: docker 
       append: yes 
+  # Set permission on /var/run/docker.sock
+  - name: Set permission on /var/run/docker.sock
+    ansible.builtin.file:
+      path: /var/run/docker.sock
+      mode: '0777'
+  # Install sshpass on the slave 
+  

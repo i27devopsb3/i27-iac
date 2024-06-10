@@ -40,6 +40,10 @@ variable "instances" {
       instance_type = "e2-medium"
       zone = "us-east1-b"
     }
+    "docker-server" = {
+      instance_type = "e2-medium"
+      zone = "us-east1-b"
+    }
   }
 }
 

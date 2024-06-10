@@ -12,4 +12,18 @@
 
 ### Jenkins:
 - Create a small groovy script to list down all the plugins in my jenkins node.
-- Make sure the user is having permsiosn to execute docker commands without sudo .
+- Make sure the user is having permsiosn to execute docker commands without sudo.
+
+
+## Docker Deploy Tasks:
+* Add a new node(docker) in the variable section of terraform
+* Once the server is created ,  add the docker details in the inv file of ansible.
+* Create a playbook to 
+    * install docker 
+    * to create a user specific to docker 
+    * add user to docker group 
+    * Set permission for docker.sock
+    * Enable password authentication to ssh 
+    * Restart ssh service 
+    * add the user to sudoers file
+* Run playbook , so docker installs 
