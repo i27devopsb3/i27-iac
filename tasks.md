@@ -7,15 +7,15 @@
 - Mention the bucket name dynamically during the runtime(terraform apply)
 - Explore a way where i can mention the know_hosts approval rather than giving as `yes`
 
-### Playbooks
+### Playbooks [Done]
 - Create a playbook to install configure `sonar`
 
-### Jenkins:
+### Jenkins: 
 - Create a small groovy script to list down all the plugins in my jenkins node.
 - Make sure the user is having permsiosn to execute docker commands without sudo.
 
 
-## Docker Deploy Tasks:
+## Docker Deploy Tasks: [Done]
 * Add a new node(docker) in the variable section of terraform
 * Once the server is created ,  add the docker details in the inv file of ansible.
 * Create a playbook to 
@@ -27,3 +27,8 @@
     * Restart ssh service 
     * add the user to sudoers file
 * Run playbook , so docker installs 
+
+
+## Prod Approval:
+* Modify the pipeline to take tags with format `v.x.x.x` to production .
+* If the branch is a tag , then there is no way we can skip the scans.
