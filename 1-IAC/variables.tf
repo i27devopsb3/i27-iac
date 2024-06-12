@@ -4,6 +4,7 @@ variable "projectid" {
 
 variable "region" {
   default = "us-central1"
+  type = string
 }
 
 variable "vpc_name" {
