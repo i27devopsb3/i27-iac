@@ -51,3 +51,7 @@ variable "instances" {
 variable "vm_user" {
   default = "siva" # -var=vm_user=mahers
 }
+variable "node_count" {
+  default = 1
+}
+

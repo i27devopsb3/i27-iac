@@ -7,3 +7,12 @@ provider "google" {
   credentials = file("creds.json")
 }
 
+
+
+# terraform {
+#    # Remote backend solution to store terraform state information
+#   backend "gcs" {
+#     bucket = "buckename"
+#     prefix = "infrastate"
+#   }
+# }

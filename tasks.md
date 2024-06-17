@@ -30,5 +30,23 @@
 
 
 ## Prod Approval:
-* Modify the pipeline to take tags with format `v.x.x.x` to production .
+* Modify the pipeline to take tags with format `v.x.x.x` only to production.
 * If the branch is a tag , then there is no way we can skip the scans.
+
+## NodeApp
+* Create a Dockerfile for node application, build and push to registry
+* Test with a contianer 
+* Create a similar Jenkinsfile like microservices for deployment on node application. 
+
+
+## Next steps:
+* Create some data into products database. 
+    * for this lets use postname
+    * use postman to do some operations
+* Create a K8s Cluster. 
+* Convert the API's and Frontend into k8s manifests.
+* Modify the Jenkinsfiles to deploy to K8S Cluster instead of containers.
+* Convert our Jenkins pipeline into Shared Libraries. 
+* Move the registry from hub to jfrog and make them private.
+* make the deployments using helma and modify the SharedLibrari accordingly.
+
