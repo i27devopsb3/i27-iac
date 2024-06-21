@@ -39,6 +39,14 @@
 * Create a similar Jenkinsfile like microservices for deployment on node application. 
 
 
+## k8s 
+* Create a method in src/com/i27academy/k8s/K8s.groovy
+    * Create a method in a way that `gcloud auth activate-service-account jenkins@quantum-weft-420714.iam.gserviceaccount.com --key-file=key.json` is dynamically passed.
+* Install Kubectl on the Slave using playbook task in slave machine.
+
+
+
+
 ## Next steps:
 * Create some data into products database. 
     * for this lets use postname
@@ -49,4 +57,6 @@
 * Convert our Jenkins pipeline into Shared Libraries. 
 * Move the registry from hub to jfrog and make them private.
 * make the deployments using helma and modify the SharedLibrari accordingly.
+
+
 

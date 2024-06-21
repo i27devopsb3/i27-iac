@@ -53,5 +53,6 @@
     ansible.builtin.file:
       path: /var/run/docker.sock
       mode: '0777'
-  # Install sshpass on the slave 
+  # Install sshpass on the Slave 
+  # Install Kubectl on the Slave , refere 5-kubectl.yaml file for steps
   

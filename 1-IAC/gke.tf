@@ -8,3 +8,4 @@ resource "google_container_cluster" "my_cluster" {
     disk_size_gb = "30"
   }
 }
+
